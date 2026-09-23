@@ -1,0 +1,3 @@
+class Resumes::TextExtractor
+ 
+end

@@ -1,0 +1,3 @@
+class JobDescription < ApplicationRecord
+
+end

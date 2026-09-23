@@ -1,0 +1,3 @@
+class Resumes::TextNormalizer
+
+end
