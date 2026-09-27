@@ -12,9 +12,6 @@
   <%= form.submit "Upload", class: "btn btn-primary" %>
 <% end %>
 
-<% @resumes.each do |resume| %>
   <article class="resume">
-    <h2><%= resume.file.attached? ? resume.file.filename : "Resume" %></h2>
-    <pre><%= resume.raw_text %></pre>
+    <p><%= @comparison.result %></p>
   </article>
-<% end %>

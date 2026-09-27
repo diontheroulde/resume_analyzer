@@ -1,6 +1,7 @@
 class ResumesController < ApplicationController
   def index
     @resumes = Resume.all
+    @comparison = Comparison.last
   end
 
   def create
@@ -11,7 +12,8 @@ class ResumesController < ApplicationController
     ActiveRecord::Base.transaction do
       resume = Resume.create!(file: uploaded, raw_text: text, status: :completed)
       job_description = JobDescription.create!(job_description_params)
-      Comparison.create!(resume: resume, job_description: job_description, status: :pending)
+      result = Resumes::Analyzer.call(resume.raw_text, job_description.descriptions)
+      Comparison.create!(resume: resume, job_description: job_description, status: :completed, result: result)
     end
 
     redirect_to resumes_path
