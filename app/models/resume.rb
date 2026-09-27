@@ -1,7 +1,9 @@
 class Resume < ApplicationRecord
+  self.table_name = "resumes_tables"
+
   has_one_attached :file
 
-  enum status: {
+  enum :status, {
     pending: 0,
     processing: 1,
     completed: 2,
