@@ -197,6 +197,9 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-musl)
       racc (~> 1.4)
+    openai (0.95.0)
+      connection_pool (>= 2.2.3)
+      logger
     ostruct (0.6.3)
     parallel (2.2.0)
     parser (3.3.12.0)
@@ -397,6 +400,7 @@ DEPENDENCIES
   json (~> 2.10)
   kamal
   mysql2
+  openai
   pdf-reader
   propshaft
   puma (>= 5.0)
