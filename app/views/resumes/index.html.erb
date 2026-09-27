@@ -1,0 +1,20 @@
+<%= form_with model: Resume.new do |form| %>
+  <%= form.label :file, "Resume PDF", class: "form-label" %>
+  <%= form.file_field :file, class: "form-control", accept: "application/pdf" %>
+
+  <%= form.fields_for :job_description, JobDescription.new do |job_form| %>
+    <%= job_form.label :title, "Job title" %>
+    <%= job_form.text_field :title %>
+    <%= job_form.label :descriptions, "Job Description" %>
+    <%= job_form.text_area :descriptions %>
+  <% end %>
+  
+  <%= form.submit "Upload", class: "btn btn-primary" %>
+<% end %>
+
+<% @resumes.each do |resume| %>
+  <article class="resume">
+    <h2><%= resume.file.attached? ? resume.file.filename : "Resume" %></h2>
+    <pre><%= resume.raw_text %></pre>
+  </article>
+<% end %>
