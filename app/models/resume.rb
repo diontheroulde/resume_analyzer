@@ -1,4 +1,6 @@
 class Resume < ApplicationRecord
+  has_one_attached :file
+
   enum status: {
     pending: 0,
     processing: 1,
