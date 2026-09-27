@@ -1,32 +1,43 @@
 class Resumes::Analyzer
-  def self.call(raw_text)
+  def self.call(raw_text, job_description)
     client = OpenAI::Client.new
 
     response = client.chat.completions.create(
       model: "gpt-4o",
       messages: [
-        { role: "user", content: "Extract structured data from this resume:\n\n#{raw_text}" }
+        {
+          role: "system",
+          content: "Judge the match only from the supplied text, and never invent skills, metrics, or experience. Suggested wording may clarify what the resume already says."
+        },
+        {
+          role: "user",
+          content: "Resume:\n\n#{raw_text}\n\nJob Description:\n\n#{job_description}\n\nCompare the resume against the job description."
+        }
       ],
-      tools: [resume_extraction_tool],
-      tool_choice: { type: "function", function: { name: "extract_resume" } }
+      tools: [comparison_result_tool],
+      tool_choice: { type: "function", function: { name: "comparison_result" } }
     )
 
     tool_call = response.choices.first.message.tool_calls.first
     JSON.parse(tool_call.function.arguments)
   end
 
-  def self.resume_extraction_tool
+  def self.comparison_result_tool
     {
       type: "function",
       function: {
-        name: "extract_resume",
-        description: "Extracts structured fields from resume text",
+        name: "comparison_result",
+        description: "Generates a comparison result between a resume and a job description",
         parameters: {
           type: "object",
           properties: {
+            overall_score: { type: "integer" },
             summary: { type: "string" },
-            skills: { type: "array", items: { type: "string" } },
-            total_years_experience: { type: "number" },
+            matched_requirements: { type: "array", items: { type: "string" } },
+            missing_requirements: { type: "array", items: { type: "string" } },
+            keyword_gaps: { type: "array", items: { type: "string" } },
+            wording_suggestions: { type: "array", items: { type: "object", properties: { original: { type: "string" }, suggested: { type: "string" }, reason: { type: "string" } } } },
+            total_years_experience: { type: "integer" },
             roles: {
               type: "array",
               items: {
@@ -39,7 +50,7 @@ class Resumes::Analyzer
               }
             }
           },
-          required: ["skills", "roles"]
+          required: ["overall_score", "summary", "matched_requirements", "missing_requirements"]
         }
       }
     }
