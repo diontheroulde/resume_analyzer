@@ -164,6 +164,8 @@ GEM
       drb (~> 2.0)
       prism (~> 1.5)
     msgpack (1.8.5)
+    mysql2 (0.5.7)
+      bigdecimal
     net-imap (0.6.7)
       date
       net-protocol
@@ -394,6 +396,7 @@ DEPENDENCIES
   jbuilder
   json (~> 2.10)
   kamal
+  mysql2
   pdf-reader
   propshaft
   puma (>= 5.0)
