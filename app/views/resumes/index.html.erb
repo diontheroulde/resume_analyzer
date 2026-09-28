@@ -30,6 +30,33 @@
         <h2>Summary</h2>
         <p><%= @comparison.result["match_summary"] %></p>
         <br>
+
+        <% report = @comparison.result["keyword_report"] %>
+        <% if report.present? %>
+          <h2>Keyword Check</h2>
+
+          <h3>Missing</h3>
+          <ul>
+            <% Array(report["missing"]).each do |entry| %>
+              <li><%= entry["keyword"] %> (<%= entry["importance"].to_s.humanize.downcase %>)</li>
+            <% end %>
+          </ul>
+
+          <h3>Present under a different name</h3>
+          <ul>
+            <% Array(report["variant"]).each do |entry| %>
+              <li>
+                Job says <strong><%= entry["keyword"] %></strong>,
+                your resume says <strong><%= entry["found_as"] %></strong>
+              </li>
+            <% end %>
+          </ul>
+
+          <h3>Matched</h3>
+          <p><%= Array(report["exact"]).map { |entry| entry["keyword"] }.join(", ") %></p>
+          <br>
+        <% end %>
+
         <h2>Suggested Fixes</h2>
         <ul>
           <% @comparison.result["wording_suggestions"].each do |suggestion| %>

@@ -1,5 +1,5 @@
 class Resumes::Analyzer
-  def self.call(raw_text, job_description)
+  def self.call(raw_text, job_description, keyword_report)
     client = OpenAI::Client.new
 
     response = client.chat.completions.create(
@@ -15,7 +15,9 @@ class Resumes::Analyzer
         },
         {
           role: "user",
-          content: "Resume:\n\n#{raw_text}\n\nJob Description:\n\n#{job_description}\n\nCompare the resume against the job description."
+          content: "Resume:\n\n#{raw_text}\n\nJob Description:\n\n#{job_description}\n\n" \
+           "Keyword check (computed by code, treat as fact):\n#{keyword_report.to_json}\n\n" \
+           "Compare the resume against the job description."
         }
       ],
       tools: [ comparison_result_tool ],
@@ -39,7 +41,6 @@ class Resumes::Analyzer
             match_summary: { type: "string" },
             matched_requirements: { type: "array", items: { type: "string" } },
             missing_requirements: { type: "array", items: { type: "string" } },
-            keyword_gaps: { type: "array", items: { type: "string" } },
             wording_suggestions: {
               type: "array",
               items: {
@@ -66,7 +67,7 @@ class Resumes::Analyzer
               required: [ "present", "strengths", "weaknesses", "suggested" ]
             }
           },
-          required: [ "overall_score", "match_summary", "matched_requirements", "missing_requirements", "keyword_gaps", "wording_suggestions", "resume_summary_feedback" ]
+          required: [ "overall_score", "match_summary", "matched_requirements", "missing_requirements", "wording_suggestions", "resume_summary_feedback" ]
         }
       }
     }

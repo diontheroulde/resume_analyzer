@@ -12,13 +12,12 @@ class ResumesController < ApplicationController
     ActiveRecord::Base.transaction do
       resume = Resume.create!(file: uploaded, raw_text: text, status: :completed)
       job_description = JobDescription.create!(job_description_params)
-      result = Resumes::Analyzer.call(resume.raw_text, job_description.descriptions)
+      result = Comparisons::Run.call(resume.raw_text, job_description.descriptions)
       Comparison.create!(resume: resume, job_description: job_description, status: :completed, result: result)
     end
 
     redirect_to resumes_path
   end
-
   private
 
   def resume_params
