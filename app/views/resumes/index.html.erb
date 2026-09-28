@@ -1,17 +1,71 @@
-<%= form_with model: Resume.new do |form| %>
-  <%= form.label :file, "Resume PDF", class: "form-label" %>
-  <%= form.file_field :file, class: "form-control", accept: "application/pdf" %>
+<%= stylesheet_link_tag "resumes/styles" %>
 
-  <%= form.fields_for :job_description, JobDescription.new do |job_form| %>
-    <%= job_form.label :title, "Job title" %>
-    <%= job_form.text_field :title %>
-    <%= job_form.label :descriptions, "Job Description" %>
-    <%= job_form.text_area :descriptions %>
+<div class="container">
+  <%= form_with model: Resume.new do |form| %>
+    <div class="form-group">
+      <%= form.label :file, "Resume PDF", class: "form-label" %>
+      <%= form.file_field :file, class: "form-control", accept: "application/pdf" %>
+    </div>
+
+    <%= form.fields_for :job_description, JobDescription.new do |job_form| %>
+      <div class="form-group">
+        <%= job_form.label :title, "Job title", class: "form-label" %>
+        <%= job_form.text_field :title, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= job_form.label :descriptions, "Job Description", class: "form-label" %>
+        <%= job_form.text_area :descriptions, class: "form-control" %>
+      </div>
+    <% end %>
+    <div class="form-group">
+      <%= form.submit "Upload", class: "btn btn-primary" %>
+    </div>
   <% end %>
-  
-  <%= form.submit "Upload", class: "btn btn-primary" %>
-<% end %>
 
-  <article class="resume">
-    <p><%= @comparison.result %></p>
-  </article>
+  <% if @comparison.present? %>
+    <div class="comparison">
+      <article class="resume">
+        <h2>Overall Score: <%= @comparison.result["overall_score"] %> / 100</h2>
+        <br>
+        <h2>Summary</h2>
+        <p><%= @comparison.result["match_summary"] %></p>
+        <br>
+        <h2>Suggested Fixes</h2>
+        <ul>
+          <% @comparison.result["wording_suggestions"].each do |suggestion| %>
+            <li>
+              <strong>Original:</strong> <%= suggestion["original"] %>
+              <br>
+              <strong>Suggested:</strong> <%= suggestion["suggested"] %>
+              <br>
+              <strong>Reason:</strong> <%= suggestion["reason"] %>
+            </li>
+          <% end %>
+        </ul>
+        <br>
+        <% feedback = @comparison.result["resume_summary_feedback"] %>
+        <% if feedback.present? && feedback["original"].present? %>
+          <h2>Resume Summary Feedback</h2>
+          <p><%= feedback["original"] %></p>
+
+          <h2>Strengths</h2>
+          <ul>
+            <% Array(feedback["strengths"]).each do |strength| %>
+              <li><%= strength %></li>
+            <% end %>
+          </ul>
+
+          <h2>Weaknesses</h2>
+          <ul>
+            <% Array(feedback["weaknesses"]).each do |weakness| %>
+              <li><%= weakness %></li>
+            <% end %>
+          </ul>
+
+          <h2>Suggested Summary</h2>
+          <p><%= feedback["suggested"] %></p>
+        <% end %>
+      </article>
+    </div>
+  <% end %>
+</div>

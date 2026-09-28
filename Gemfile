@@ -1,10 +1,11 @@
 source "https://rubygems.org"
 
-gem 'pdf-reader'
+gem "pdf-reader"
 gem "json", "~> 2.10"
 gem "mysql2"
-gem 'openai'
-gem 'dotenv-rails', groups: [:development, :test]
+gem "openai"
+gem "dotenv-rails", groups: [ :development, :test ]
+gem "dartsass-rails"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.0.4"

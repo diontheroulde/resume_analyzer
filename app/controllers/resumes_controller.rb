@@ -22,7 +22,7 @@ class ResumesController < ApplicationController
   private
 
   def resume_params
-    params.require(:resume).permit(:file, job_description: [:title, :descriptions])
+    params.require(:resume).permit(:file, job_description: [ :title, :descriptions ])
   end
 
   def job_description_params
