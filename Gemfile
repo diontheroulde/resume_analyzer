@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "pdf-reader"
-gem "json", "~> 2.10"
+gem "json", "~> 3.1"
 gem "mysql2"
 gem "openai"
 gem "dotenv-rails", groups: [ :development, :test ]
